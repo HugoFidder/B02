@@ -441,7 +441,7 @@ plt.xlabel("Span (m)")
 plt.ylabel("Moment (Nm)")
 plt.show()
 
-def deflection(y):
+def deflection():
     # Correct integration: EI * d²v/dy² = M(y)
     # Integrate twice from root (y=0) with boundary conditions: v(0)=0, dv/dy(0)=0
     # First integration: dv/dy = ∫[0 to y] M(s)/(EI(s)) ds, with dv/dy(0) = 0
@@ -451,7 +451,7 @@ def deflection(y):
     v = sp.integrate.cumulative_trapezoid(slope, y_linspace, initial=0)
     return v
 
-v = deflection(y_linspace)
+v = deflection()
 
 print("Deflection at tip:", v[-1], "m")
 plt.plot(y_linspace,v)
