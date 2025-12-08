@@ -441,11 +441,15 @@ plt.xlabel("Span (m)")
 plt.ylabel("Moment (Nm)")
 plt.show()
 
+# Create interpolated function from M_arr for better precision
+M_func = sp.interpolate.CubicSpline(y_linspace, M_arr)
+
 def deflection():
     # Correct integration: EI * d²v/dy² = M(y)
     # Integrate twice from root (y=0) with boundary conditions: v(0)=0, dv/dy(0)=0
     # First integration: dv/dy = ∫[0 to y] M(s)/(EI(s)) ds, with dv/dy(0) = 0
-    curvature = M_arr / (Emod * distributed_Ixx(y_linspace))
+    # Use interpolated M_func for better precision
+    curvature = M_func(y_linspace) / (Emod * distributed_Ixx(y_linspace))
     slope = sp.integrate.cumulative_trapezoid(curvature, y_linspace, initial=0)
     # Second integration: v = ∫[0 to y] slope(s) ds, with v(0) = 0
     v = sp.integrate.cumulative_trapezoid(slope, y_linspace, initial=0)
