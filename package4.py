@@ -444,18 +444,18 @@ plt.show()
 # Create interpolated function from M_arr for better precision
 M_func = sp.interpolate.CubicSpline(y_linspace, M_arr)
 
-def deflection():
+def deflection(y_linspace):
     # Correct integration: EI * d²v/dy² = M(y)
     # Integrate twice from root (y=0) with boundary conditions: v(0)=0, dv/dy(0)=0
     # First integration: dv/dy = ∫[0 to y] M(s)/(EI(s)) ds, with dv/dy(0) = 0
     # Use interpolated M_func for better precision
-    curvature = M_func(y_linspace) / (Emod * distributed_Ixx(y_linspace))
-    slope = sp.integrate.cumulative_trapezoid(curvature, y_linspace, initial=0)
+    ddvdy = M_func(y_linspace) / (Emod * distributed_Ixx(y_linspace))
+    dvdy = sp.integrate.cumulative_trapezoid(ddvdy, y_linspace, initial=0)
     # Second integration: v = ∫[0 to y] slope(s) ds, with v(0) = 0
-    v = sp.integrate.cumulative_trapezoid(slope, y_linspace, initial=0)
+    v = sp.integrate.cumulative_trapezoid(dvdy, y_linspace, initial=0)
     return v
 
-v = deflection()
+v = deflection(y_linspace)
 
 print("Deflection at tip:", v[-1], "m")
 plt.plot(y_linspace,v)
