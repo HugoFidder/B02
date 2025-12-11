@@ -35,7 +35,8 @@ jan = 000000
 hugo = 11111
 alicja = 22222
 hello = 90
-
+cool = 1
+lourenco = cool
 
 #Cl equation determination
 Cl_intercept = CL0
