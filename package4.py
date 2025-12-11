@@ -8,6 +8,7 @@ import pandas as pd
 from constants import *
 from functions import *
 
+
 # XFLR data from postive y onwards at aoa 0
 df = pd.read_csv('./Alpha0.txt', on_bad_lines='skip')
 Alpha0_arr = df.to_numpy()
@@ -29,6 +30,9 @@ aInduced10 = Alpha10_arr[19:,2]
 Cl10 = Alpha10_arr[19:,3]
 Cdi10 = Alpha10_arr[19:,5]
 Cm10 = Alpha10_arr[19:,7]
+
+jan = 000000
+hugo = 11111
 
 #Cl equation determination
 Cl_intercept = CL0
@@ -243,6 +247,7 @@ V_func = shear_distribution(y_linspace,CL=Load_CL,q=.5*vCrit**2*rhoISA)
 
 
 for i,y in enumerate(y_linspace):
+    M0 = sp.integrate.quad(V_func,0,b/2)
     M = sp.integrate.quad(V_func,y,b/2)
     M_arr[i]=-M[0]
 
