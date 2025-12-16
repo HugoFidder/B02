@@ -45,7 +45,6 @@ for i,y in enumerate(y_linspace):
     Torque_arr[i] = T[0]
 
 #second moment of inertia for I shape
-I = 1*10**(-4)
 A_spar = L_area(a,t)
 
 
