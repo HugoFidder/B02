@@ -1,23 +1,23 @@
 import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
-from package4 import chord0, lift, Cx, moment, Cz, chordList, y_linspace, drag, b, Load_CL, CM0, CM_a, CL0, CL_a, vCrit, rhoISA, spars, Gmod, funcChord, t
+from package4 import chord0, lift, Cx, moment, Cz, c_arr, y_linspace, drag, b, Load_CL, CM0, CM_alpha, CL0, CL_alpha, vCrit, rhoISA, spars, Gmod, funcChord, t
 
 # Ensure arrays
 y_linspace = np.asarray(y_linspace)
-chordList = np.asarray(chordList)
+c_arr = np.asarray(c_arr)
 
 # Geometric positions
-z_ac = 0.0171875 * chordList
-x_ac = 0.25 * chordList
-x_c  = Cx * chordList
-z_c  = Cz * chordList
+z_ac = 0.0171875 * c_arr
+x_ac = 0.25 * c_arr
+x_c  = Cx * c_arr
+z_c  = Cz * c_arr
 
 # Lift distribution
 # L = np.asarray(lift(chordList))
 
 # Drag distribution
-D = np.asarray(drag(chordList))
+D = np.asarray(drag(c_arr))
 
 
 # Distance from centroid to aerodynamic centre
@@ -35,7 +35,7 @@ print(moment_ac_D)
 # Cm pitching moment distribution
 moment_ac_Cm = np.empty_like(y_linspace)
 for i,y in enumerate(y_linspace):
-    moment_ac_Cm[i] = np.asarray(moment(y, Load_CL, CM =CM0+CM_a*((Load_CL-CL0)/CL_a), q=.5*rhoISA*vCrit**2))
+    moment_ac_Cm[i] = np.asarray(moment(y, Load_CL, CM =CM0+CM_alpha*((Load_CL-CL0)/CL_alpha), q=.5*rhoISA*vCrit**2))
 
 # Total torque distribution
 moment_total = moment_ac_Cm + moment_ac_D
