@@ -109,11 +109,11 @@ I_min_stringer = L_Imin(a,t_s)
 #spar web buckling
 f_spar_crit_stress = []
 for y in range(0, len(y_linspace)):
-    f_spar_crit_stress.append(spar_buckling_stress(t_spar_arr[y], y_linspace[y], True))
+    f_spar_crit_stress.append(spar_buckling_stress(t_spar_arr[y]*funcChord(y), y_linspace[y], True))
 
 r_spar_crit_stress = []
 for y in range(0, len(y_linspace)):
-    r_spar_crit_stress.append(spar_buckling_stress(t_spar_arr[y], y_linspace[y], False))
+    r_spar_crit_stress.append(spar_buckling_stress(t_spar_arr[y]*funcChord(y), y_linspace[y], False))
 
 # f_spar_crit_stress = spar_buckling_stress(t_spar_arr, b_plate_front, k_s)
 # # print(f'Critical stress for web of the front spar {tau_critical_front}')
@@ -125,7 +125,7 @@ for y in range(0, len(y_linspace)):
 #average web shear  
 tau_average = V_arr/((h_f_spar+h_r_spar) * funcChord(y_linspace)*t_spar_arr)
 tau_max_average = k_v * tau_average
-
+ 
 # shear due to torsion
 q = Torque_arr/(2*A_enclosed)
 
