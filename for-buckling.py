@@ -55,15 +55,15 @@ def L_Imin(a,t):
 #web buckling front spar
 
 def b_plate_front(spanlocation): 
-    for itvar in range(0,round(ribspacing/(b/2))+1):
-        if spanlocation <= (y_linspace[-1]/(round(ribspacing/(b/2))+1))*(itvar+1):
-            b_plate_f = min(ribspacing, h_f_spar*funcChord(((y_linspace[-1])/(round(ribspacing/(b/2))+1))*(itvar+1)))
+    for itvar in range(0,round((b/2)/ribspacing)+1):
+        if spanlocation <= ribspacing*(itvar+1):
+            b_plate_f = min(ribspacing, h_f_spar*funcChord(ribspacing*(itvar+1)))
     return b_plate_f
 
 def b_plate_rear(spanlocation):
-    for itvar in range(0,round(ribspacing/(b/2))+1):
-        if spanlocation <= (y_linspace[-1]/(round(ribspacing/(b/2))+1))*(itvar+1):
-            b_plate_r = min(ribspacing, h_r_spar*funcChord(((y_linspace[-1])/(round(ribspacing/(b/2))+1))*(itvar+1)))
+    for itvar in range(0,round((b/2)/ribspacing)+1):
+        if spanlocation <= (ribspacing)*(itvar+1):
+            b_plate_r = min(ribspacing, h_r_spar*funcChord(ribspacing*(itvar+1)))
     return b_plate_r
 
 #front is a boolean designating whether its caluclating for front (true) or back (false) spar
@@ -71,11 +71,10 @@ def spar_buckling_stress(thickness, y_coord , front, k_s=10):
     """ 
     Critical shear stress for spar web buckling from manual 
     """
-    # if front == True:
-    #     b_plate = b_plate_front(y_coord)
-    # else:
-    #     b_plate = b_plate_rear(y_coord)
-    b_plate = 0.10
+    if front == True:
+        b_plate = b_plate_front(y_coord)
+    else:
+        b_plate = b_plate_rear(y_coord)
     return ((pi**2)*k_s*Emod)/(12*(1-poisson**2)) * ((thickness/b_plate)**2)
 
 def column_buckling_stress(K,I_min,A,L):
@@ -110,11 +109,11 @@ I_min_stringer = L_Imin(a,t_s)
 #spar web buckling
 f_spar_crit_stress = []
 for y in range(0, len(y_linspace)):
-    f_spar_crit_stress.append(spar_buckling_stress(t_spar_arr[y]*funcChord(y), y_linspace[y], True))
+    f_spar_crit_stress.append(spar_buckling_stress(t_spar_arr[y], y_linspace[y], True))
 
 r_spar_crit_stress = []
 for y in range(0, len(y_linspace)):
-    r_spar_crit_stress.append(spar_buckling_stress(t_spar_arr[y]*funcChord(y), y_linspace[y], False))
+    r_spar_crit_stress.append(spar_buckling_stress(t_spar_arr[y], y_linspace[y], False))
 
 # f_spar_crit_stress = spar_buckling_stress(t_spar_arr, b_plate_front, k_s)
 # # print(f'Critical stress for web of the front spar {tau_critical_front}')
@@ -130,8 +129,8 @@ tau_max_average = k_v * tau_average
 # shear due to torsion
 q = Torque_arr/(2*A_enclosed)
 
-tau_max_ave_front = tau_max_average + q/(t_spar_arr*funcChord(y_linspace))
-tau_max_ave_rear = tau_max_average - q/(t_spar_arr*funcChord(y_linspace))
+tau_max_ave_front = tau_max_average + q/(t_spar_arr)
+tau_max_ave_rear = tau_max_average - q/(t_spar_arr)
 
 print(tau_max_ave_front)
 
@@ -171,12 +170,12 @@ print()
 
 #diagrams
 plt.close('all')
-# plt.plot(y_linspace, -MoF_web_front, label='Margin of safety (front web)')
-# plt.plot(y_linspace, -MoF_web_rear, label='Margin of safety (rear web)')
-plt.plot(y_linspace, f_spar_crit_stress, label='Margin of safety (front web)')
+plt.plot(y_linspace, -MoF_web_front, label='Margin of safety (front web)')
+plt.plot(y_linspace, MoF_web_rear, label='Margin of safety (rear web)')
+# plt.plot(y_linspace, f_spar_crit_stress, label='Margin of safety (front web)')
 
 #plt.plot(y_linspace, MoF_skin_front_compressive, label='Margin of safety (skin)')
-# plt.ylim(0,10000)
+plt.ylim(-100,100)
 plt.ylabel('Safety Margin')
 plt.xlabel('Spanwise Location (m)')
 plt.title('Safety Margin in Spar Web Distribution along Span')
@@ -184,5 +183,7 @@ plt.legend()
 plt.show()
 
 
-print(f_spar_crit_stress)
-print(t_spar_arr)
+# print(f_spar_crit_stress)
+# print(t_spar_arr)
+print(MoF_web_front)
+print(h_f_spar)
