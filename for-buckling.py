@@ -31,7 +31,7 @@ t_s = .006   # thickness of L stringer section
 """ Rib parameters """
 #nribs = 5 #placeholder
 #ribspacing = (b/2)/nribs
-ribspacing = 0.092
+ribspacing = 0.349
 
 """ Functions for L-stringer properties """
 def L_area(a,t):
@@ -71,11 +71,12 @@ def spar_buckling_stress(thickness, y_coord , front, k_s=10):
     """ 
     Critical shear stress for spar web buckling from manual 
     """
-    if front == True:
-        b_plate = b_plate_front(y_coord)
-    else:
-        b_plate = b_plate_rear(y_coord)
-    return ((pi**2)*k_s*Emod)/(12*(1-poisson**2)) * ((thickness/b_plate)**2) #b was b_plate
+    # if front == True:
+    #     b_plate = b_plate_front(y_coord)
+    # else:
+    #     b_plate = b_plate_rear(y_coord)
+    b_plate = 0.10
+    return ((pi**2)*k_s*Emod)/(12*(1-poisson**2)) * ((thickness/b_plate)**2)
 
 def column_buckling_stress(K,I_min,A,L):
     """ 
@@ -123,14 +124,16 @@ for y in range(0, len(y_linspace)):
 # # print(f'Critical stress for web of the rear spar {tau_critical_rear}')
 
 #average web shear  
-tau_average = V_arr/((h_f_spar+h_r_spar) * funcChord(y_linspace)*t_spar_arr)
+tau_average = V_arr/((h_f_spar+h_r_spar) * funcChord(y_linspace) *t_spar_arr)
 tau_max_average = k_v * tau_average
  
 # shear due to torsion
 q = Torque_arr/(2*A_enclosed)
 
-tau_max_ave_front = tau_max_average + q/t_spar_arr
-tau_max_ave_rear = tau_max_average - q/t_spar_arr
+tau_max_ave_front = tau_max_average + q/(t_spar_arr*funcChord(y_linspace))
+tau_max_ave_rear = tau_max_average - q/(t_spar_arr*funcChord(y_linspace))
+
+print(tau_max_ave_front)
 
 print("taumaxav", tau_max_average[3])
 print("fsparstress", f_spar_crit_stress[3])
@@ -153,8 +156,8 @@ sigma_crit_buckling = column_buckling_stress(1/4,I_min_stringer,A_stringer,ribsp
 print(f'Critical column buckling stress: {round(sigma_crit_buckling/1e6,2)} MPa')
 
 #margins of safety (MoF) 
-MoF_web_front = f_spar_crit_stress / tau_max_average
-MoF_web_rear = r_spar_crit_stress / tau_max_average
+MoF_web_front = f_spar_crit_stress / tau_max_ave_front
+MoF_web_rear = r_spar_crit_stress / tau_max_ave_rear
 
 MoF_skin_front_compressive = sigma_crit_arr/ sigma_max_compressive 
 MoF_skin_front_tensile = sigma_crit_arr / sigma_max_tensile
@@ -168,12 +171,18 @@ print()
 
 #diagrams
 plt.close('all')
-plt.plot(y_linspace, MoF_web_front, label='Margin of safety (front web)')
-plt.plot(y_linspace, MoF_web_rear, label='Margin of safety (rear web)')
+# plt.plot(y_linspace, -MoF_web_front, label='Margin of safety (front web)')
+# plt.plot(y_linspace, -MoF_web_rear, label='Margin of safety (rear web)')
+plt.plot(y_linspace, f_spar_crit_stress, label='Margin of safety (front web)')
+
 #plt.plot(y_linspace, MoF_skin_front_compressive, label='Margin of safety (skin)')
-plt.ylim(-5000,5000)
+# plt.ylim(0,10000)
 plt.ylabel('Safety Margin')
 plt.xlabel('Spanwise Location (m)')
 plt.title('Safety Margin in Spar Web Distribution along Span')
 plt.legend()
 plt.show()
+
+
+print(f_spar_crit_stress)
+print(t_spar_arr)
