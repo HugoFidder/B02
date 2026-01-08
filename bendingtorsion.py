@@ -59,7 +59,7 @@ plt.title("Spanwise Torque Distribution")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
-plt.show()
+# plt.show()
 
 
 
@@ -81,7 +81,7 @@ plt.plot(y_linspace, twist_arr)
 plt.ylabel("Twist [rad]")
 plt.xlabel("Spanwise position y [m]")
 plt.title("Wing twist over the Span")
-plt.show()
+# plt.show()
 
 
 print("TORQUE: ",np.polyfit(y_linspace, Torque_arr, 5))

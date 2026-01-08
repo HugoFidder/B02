@@ -4,7 +4,7 @@ Gmod = 28e9         #Pa (shear modulus)
 rho = 2780          #kg/m^3
 sigma_y = 450e6     #Pa (yield strength)
 y_ultimate = 485e6
-poission = .33      #-
+poisson = .33      #-
 
 # Environment
 M = .68

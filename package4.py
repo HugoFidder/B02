@@ -256,10 +256,10 @@ def deflection(y_linspace):
     return v
 
 
-plot_deflection()
+# plot_deflection()
 
 # Plot shear force and bending moment distributions
-
+""" 
 plt.plot(y_linspace, V_func(y_linspace), label='Shear Force')
 plt.plot(y_linspace, M_func(y_linspace), label='Bending Moment')
 plt.ylabel('Force (N) / Moment (Nm)')
@@ -267,7 +267,7 @@ plt.xlabel('Spanwise Location (m)')
 plt.title('Shear Force and Bending Moment Distribution along Span')
 plt.legend()
 plt.show()
-
+ """
 
 # Plot wingbox cross-section with stringers and centroid
 """ 
